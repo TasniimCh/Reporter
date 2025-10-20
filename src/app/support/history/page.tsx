@@ -25,7 +25,7 @@ export default function HistoryPage() {
       filtered = filtered.filter((d) => d.status === filters.status)
     }
     if (filters.operator) {
-      filtered = filtered.filter((d) => d.operator.toLowerCase().includes(filters.operator.toLowerCase()))
+      filtered = filtered.filter((d) => String(d.operator).toLowerCase().includes(filters.operator.toLowerCase()))
     }
 
     console.log("[v0] Filtered declarations:", filtered)
