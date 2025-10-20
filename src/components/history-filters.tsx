@@ -49,17 +49,16 @@ export function HistoryFilters({ onFilter }: HistoryFiltersProps) {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {/* Type Filter */}
           <div className="space-y-2">
-            <Label htmlFor="type">Type de déclaration</Label>
+            <Label htmlFor="type">Type d'observation</Label>
             <Select value={filters.type} onValueChange={(value) => handleChange("type", value)}>
               <SelectTrigger id="type">
                 <SelectValue placeholder="Tous les types" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">Tous les types</SelectItem>
-                <SelectItem value="Incident">Incident</SelectItem>
-                <SelectItem value="Observation">Observation</SelectItem>
-                <SelectItem value="Maintenance">Maintenance</SelectItem>
-                <SelectItem value="Suggestion">Suggestion</SelectItem>
+                <SelectItem value="Zone de risque">Zone de risque</SelectItem>
+                <SelectItem value="Presque accident">Presque accident</SelectItem>
+                <SelectItem value="Accident">Accident</SelectItem>
               </SelectContent>
             </Select>
           </div>

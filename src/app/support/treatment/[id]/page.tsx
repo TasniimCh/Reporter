@@ -15,7 +15,7 @@ export default async function TreatmentPage({ params }: TreatmentPageProps) {
     return (
       <main className="min-h-screen bg-background">
         <div className="container mx-auto px-4 py-8">
-          <h1 className="text-2xl font-bold mb-4">Déclaration non trouvée</h1>
+          <h1 className="text-2xl font-bold mb-4">Observation non trouvée</h1>
           <Link href="/support/dashboard">
             <Button>Retour au dashboard</Button>
           </Link>
@@ -34,7 +34,7 @@ export default async function TreatmentPage({ params }: TreatmentPageProps) {
         </Link>
 
         <div className="mb-6">
-          <h1 className="text-3xl font-bold">Traitement de la déclaration {declaration.id}</h1>
+          <h1 className="text-3xl font-bold">Traitement de l'observation {declaration.id}</h1>
         </div>
 
         <TreatmentForm declaration={declaration} />

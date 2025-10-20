@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button"
 
-import type { Declaration } from "@/lib/mock-data"
+import type { Observation } from "@/lib/mock-data"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import {
   LineChart,
@@ -20,7 +20,7 @@ import {
 } from "recharts"
 
 interface HistoryChartsProps {
-  declarations: Declaration[]
+  declarations: Observation[]
 }
 
 export function HistoryCharts({ declarations }: HistoryChartsProps) {

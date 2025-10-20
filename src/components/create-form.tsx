@@ -10,16 +10,18 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { UploadCloud, PlusCircle, X } from "lucide-react"
 
-export function CreateDeclarationForm() {
+export function CreateObservationForm() {
   const router = useRouter()
   const [formData, setFormData] = useState({
-    operatorId: "",
     type: "",
     description: "",
-    location: ""
+    location: "",
+    improvementProposed: ""
   })
   const [files, setFiles] = useState<File[]>([])
+  const [correctionFiles, setCorrectionFiles] = useState<File[]>([])
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
@@ -36,48 +38,40 @@ export function CreateDeclarationForm() {
     }
   }
 
+  const handleCorrectionFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      setCorrectionFiles(Array.from(e.target.files))
+    }
+  }
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    if (!formData.operatorId.trim()) {
-      alert("Veuillez entrer votre ID/Matricule")
+    if (files.length === 0) {
+      alert("Une photo d'observation est requise.")
       return
     }
-    console.log("[v0] Form submitted:", { formData, files })
-    alert("Déclaration créée avec succès!")
+    alert("Observation créée avec succès!")
     router.push("/operator/dashboard")
   }
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Créer une nouvelle déclaration</CardTitle>
+        <CardTitle>Créer une nouvelle observation</CardTitle>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="space-y-2">
-            <Label htmlFor="operatorId">ID/Matricule de l'opérateur *</Label>
-            <Input
-              id="operatorId"
-              name="operatorId"
-              placeholder="Ex: OP001"
-              value={formData.operatorId}
-              onChange={handleInputChange}
-              required
-            />
-          </div>
-
           {/* Type de déclaration */}
-          <div className="space-y-2">
-            <Label htmlFor="type">Type de déclaration *</Label>
-            <Select value={formData.type} onValueChange={handleSelectChange}>
+          <div className="space-y-2 flex flex-col" >
+            <Label htmlFor="type">Type d'observation *</Label>
+            <Select value={formData.type} onValueChange={handleSelectChange}  >
               <SelectTrigger id="type">
                 <SelectValue placeholder="Sélectionner un type" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="Incident">Incident</SelectItem>
-                <SelectItem value="Observation">Observation</SelectItem>
-                <SelectItem value="Maintenance">Maintenance</SelectItem>
-                <SelectItem value="Suggestion">Suggestion</SelectItem>
+                <SelectItem value="Zone de risque">Zone de risque</SelectItem>
+                <SelectItem value="Presque accident">Presque accident</SelectItem>
+                <SelectItem value="Accident">Accident</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -96,13 +90,26 @@ export function CreateDeclarationForm() {
             />
           </div>
 
+          {/* Amélioration proposée (optionnel) */}
+          <div className="space-y-2">
+            <Label htmlFor="improvementProposed">Amélioration proposée (optionnel)</Label>
+            <Textarea
+              id="improvementProposed"
+              name="improvementProposed"
+              placeholder="Décrivez l'amélioration ou la solution proposée..."
+              value={formData.improvementProposed}
+              onChange={handleInputChange}
+              rows={3}
+            />
+          </div>
+
           {/* Location */}
           <div className="space-y-2">
             <Label htmlFor="location">Localisation exacte *</Label>
             <Input
               id="location"
               name="location"
-              placeholder="Zone/Machine (ex: Zone 1 - Machine A)"
+              placeholder=""
               value={formData.location}
               onChange={handleInputChange}
               required
@@ -111,7 +118,7 @@ export function CreateDeclarationForm() {
 
           {/* File Upload */}
           <div className="space-y-2">
-            <Label htmlFor="files">Pièces jointes (optionnel)</Label>
+            <Label htmlFor="files">Photo d'observation *</Label>
             <div className="border-2 border-dashed rounded-lg p-6 text-center hover:bg-muted/50 transition">
               <input
                 id="files"
@@ -119,18 +126,20 @@ export function CreateDeclarationForm() {
                 multiple
                 onChange={handleFileChange}
                 className="hidden"
-                accept="image/*,video/*,.pdf,.doc,.docx"
+                accept="image/*"
+                capture="environment"
               />
-              <label htmlFor="files" className="cursor-pointer">
+              <label htmlFor="files" className="cursor-pointer flex flex-col items-center">
+                <UploadCloud className="h-6 w-6 mb-2 text-muted-foreground" aria-hidden="true" />
                 <div className="text-sm text-muted-foreground">
-                  Glissez-déposez vos fichiers ici ou cliquez pour sélectionner
+                  Glissez-déposez vos photos ici ou cliquez pour sélectionner
                 </div>
-                <div className="text-xs text-muted-foreground mt-2">Photos, vidéos, documents (PDF, DOC, DOCX)</div>
+                <div className="text-xs text-muted-foreground mt-2">Formats pris en charge: Images uniquement</div>
               </label>
             </div>
             {files.length > 0 && (
               <div className="mt-4 space-y-2">
-                <p className="text-sm font-medium">{files.length} fichier(s) sélectionné(s):</p>
+                <p className="text-sm font-medium">{files.length} photo(s) sélectionnée(s):</p>
                 <ul className="space-y-1">
                   {files.map((file, idx) => (
                     <li key={idx} className="text-sm text-muted-foreground">
@@ -142,12 +151,47 @@ export function CreateDeclarationForm() {
             )}
           </div>
 
+          {/* Correction apportée (optionnel) */}
+          <div className="space-y-2">
+            <Label htmlFor="correctionFiles">Correction apportée</Label>
+            <div className="border-2 border-dashed rounded-lg p-6 text-center hover:bg-muted/50 transition">
+              <input
+                id="correctionFiles"
+                type="file"
+                multiple
+                onChange={handleCorrectionFileChange}
+                className="hidden"
+                accept="image/*"
+                capture="environment"
+              />
+              <label htmlFor="correctionFiles" className="cursor-pointer flex flex-col items-center">
+                <UploadCloud className="h-6 w-6 mb-2 text-muted-foreground" aria-hidden="true" />
+                <div className="text-sm text-muted-foreground">
+                  Glissez-déposez vos photos ici ou cliquez pour sélectionner
+                </div>
+                <div className="text-xs text-muted-foreground mt-2">Images uniquement</div>
+              </label>
+            </div>
+            {correctionFiles.length > 0 && (
+              <div className="mt-4 space-y-2">
+                <p className="text-sm font-medium">{correctionFiles.length} photo(s) sélectionnée(s):</p>
+                <ul className="space-y-1">
+                  {correctionFiles.map((file, idx) => (
+                    <li key={idx} className="text-sm text-muted-foreground">• {file.name}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+
           {/* Submit Button */}
           <div className="flex gap-4 pt-4">
-            <Button type="submit" className="flex-1">
-              Créer la déclaration
+            <Button type="submit" className="flex-1 gap-2">
+              <PlusCircle className="h-4 w-4" aria-hidden="true" />
+              Créer l'observation
             </Button>
-            <Button type="button" variant="outline" onClick={() => router.back()} className="flex-1">
+            <Button type="button" variant="outline" onClick={() => router.back()} className="flex-1 gap-2">
+              <X className="h-4 w-4" aria-hidden="true" />
               Annuler
             </Button>
           </div>

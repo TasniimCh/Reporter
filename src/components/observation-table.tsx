@@ -6,9 +6,9 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Card, CardContent } from "@/components/ui/card"
-import { Wrench } from "lucide-react"
+import { Eye } from "lucide-react"
 
-interface SupportTableProps {
+interface ObservationTableProps {
   declarations: Observation[]
 }
 
@@ -38,7 +38,7 @@ function priorityDot(priority?: Observation["priority"]) {
   }
 }
 
-export function SupportTable({ declarations }: SupportTableProps) {
+export function ObservationTable({ declarations }: ObservationTableProps) {
   return (
     <div>
       {/* Mobile cards */}
@@ -53,16 +53,16 @@ export function SupportTable({ declarations }: SupportTableProps) {
                     <p className="text-xs text-muted-foreground">{d.priority ?? "Normal"}</p>
                   </div>
                   <h3 className="mt-1 text-base font-semibold leading-tight truncate">{d.id} — {d.type}</h3>
-                  <p className="mt-1 text-sm text-muted-foreground truncate">{d.operator.nom} {d.operator.prenom} • {d.location}</p>
+                  <p className="mt-1 text-xs text-muted-foreground">{new Date(d.createdDate).toLocaleDateString("fr-FR")}</p>
+                  <p className="mt-1 text-sm text-muted-foreground truncate">{d.location}</p>
                 </div>
                 <Badge className={getStatusColor(d.status)}>{d.status}</Badge>
               </div>
-              <div className="mt-3 flex items-center justify-between">
-                <p className="text-sm line-clamp-2 text-muted-foreground">{d.description}</p>
-                <Link href={`/support/treatment/${d.id}`}>
+              <div className="mt-3 flex items-center justify-end">
+                <Link href={`/operator/declaration/${d.id}`}>
                   <Button variant="outline" size="sm" className="gap-2">
-                    <Wrench className="h-4 w-4" aria-hidden="true" />
-                    Traiter
+                    <Eye className="h-4 w-4" aria-hidden="true" />
+                    Voir détails
                   </Button>
                 </Link>
               </div>
@@ -78,10 +78,9 @@ export function SupportTable({ declarations }: SupportTableProps) {
             <TableRow className="bg-muted">
               <TableHead>ID</TableHead>
               <TableHead>Type</TableHead>
-              <TableHead>Opérateur</TableHead>
+              <TableHead>Date de création</TableHead>
               <TableHead>Statut</TableHead>
               <TableHead>Localisation</TableHead>
-              <TableHead>Priorité</TableHead>
               <TableHead>Actions</TableHead>
             </TableRow>
           </TableHeader>
@@ -90,23 +89,16 @@ export function SupportTable({ declarations }: SupportTableProps) {
               <TableRow key={declaration.id} className="hover:bg-muted/50">
                 <TableCell className="font-medium">{declaration.id}</TableCell>
                 <TableCell>{declaration.type}</TableCell>
-                <TableCell>{declaration.operator.nom} {declaration.operator.prenom}</TableCell>
+                <TableCell>{new Date(declaration.createdDate).toLocaleDateString("fr-FR")}</TableCell>
                 <TableCell>
                   <Badge className={getStatusColor(declaration.status)}>{declaration.status}</Badge>
                 </TableCell>
                 <TableCell className="text-sm text-muted-foreground">{declaration.location}</TableCell>
                 <TableCell>
-                  {declaration.priority ? (
-                    <Badge variant="destructive">{declaration.priority}</Badge>
-                  ) : (
-                    <span className="text-sm text-muted-foreground">Normal</span>
-                  )}
-                </TableCell>
-                <TableCell>
-                  <Link href={`/support/treatment/${declaration.id}`}>
+                  <Link href={`/operator/declaration/${declaration.id}`}>
                     <Button variant="outline" size="sm" className="gap-2">
-                      <Wrench className="h-4 w-4" aria-hidden="true" />
-                      Traiter
+                      <Eye className="h-4 w-4" aria-hidden="true" />
+                      Voir détails
                     </Button>
                   </Link>
                 </TableCell>

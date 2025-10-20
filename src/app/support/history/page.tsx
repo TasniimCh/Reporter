@@ -38,7 +38,7 @@ export default function HistoryPage() {
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold">Historique et Reporting</h1>
-          <p className="text-muted-foreground mt-2">Analyse et export des déclarations</p>
+          <p className="text-muted-foreground mt-2">Analyse et export des observations</p>
         </div>
 
         {/* Filters */}
@@ -54,7 +54,7 @@ export default function HistoryPage() {
         {/* Filtered Table */}
         <Card>
           <CardHeader>
-            <CardTitle>Déclarations filtrées ({filteredDeclarations.length})</CardTitle>
+            <CardTitle>Observations filtrées ({filteredDeclarations.length})</CardTitle>
           </CardHeader>
           <CardContent>
             <SupportTable declarations={filteredDeclarations} />

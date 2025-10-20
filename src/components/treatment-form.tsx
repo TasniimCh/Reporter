@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { type Declaration, getStatusColor, getPriorityColor } from "@/lib/mock-data"
+import { type Observation, getStatusColor, getPriorityColor } from "@/lib/mock-data"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -9,19 +9,27 @@ import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
 import Image from "next/image"
+import { UploadCloud } from "lucide-react"
 
-interface DeclarationDetailProps {
-  declaration: Declaration
+interface ObservationDetailProps {
+  declaration: Observation
 }
 
-export function TreatmentForm({ declaration }: DeclarationDetailProps) {
+export function TreatmentForm({ declaration }: ObservationDetailProps) {
   const [status, setStatus] = useState(declaration.status)
   const [priority, setPriority] = useState(declaration.priority || "Medium")
   const [comment, setComment] = useState("")
+  const [correctionFiles, setCorrectionFiles] = useState<File[]>([])
+
+  const handleCorrectionFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      setCorrectionFiles(Array.from(e.target.files))
+    }
+  }
 
   const handleValidate = () => {
     console.log("Mise à jour:", { status, priority, comment })
-    alert("Déclaration mise à jour avec succès !")
+    alert("Observation mise à jour avec succès !")
     setComment("")
   }
 
@@ -36,7 +44,7 @@ export function TreatmentForm({ declaration }: DeclarationDetailProps) {
       <Card>
         <CardHeader className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
-            <CardTitle className="text-2xl">Déclaration {declaration.id}</CardTitle>
+            <CardTitle className="text-2xl">Observation {declaration.id}</CardTitle>
             <p className="text-sm text-muted-foreground mt-1">
               Créée le {new Date(declaration.createdDate).toLocaleDateString("fr-FR")}
             </p>
@@ -71,7 +79,7 @@ export function TreatmentForm({ declaration }: DeclarationDetailProps) {
       <Tabs defaultValue="info" className="w-full">
         <TabsList className="grid w-full grid-cols-3">
           <TabsTrigger value="info">Informations</TabsTrigger>
-          <TabsTrigger value="attachments">Pièces jointes</TabsTrigger>
+          <TabsTrigger value="attachments">Photo d'observation</TabsTrigger>
           <TabsTrigger value="comments">Commentaires</TabsTrigger>
         </TabsList>
 
@@ -115,7 +123,7 @@ export function TreatmentForm({ declaration }: DeclarationDetailProps) {
 
         <TabsContent value="attachments">
           <Card>
-            <CardContent className="pt-6">
+            <CardContent className="pt-6 space-y-6">
               {declaration.attachments.length === 0 ? (
                 <p className="text-muted-foreground">Aucune pièce jointe</p>
               ) : (
@@ -141,6 +149,38 @@ export function TreatmentForm({ declaration }: DeclarationDetailProps) {
                   ))}
                 </div>
               )}
+
+              <div className="space-y-2">
+                <label htmlFor="correctionFiles" className="text-sm font-medium">Correction apportée</label>
+                <div className="border-2 border-dashed rounded-lg p-6 text-center hover:bg-muted/50 transition">
+                  <input
+                    id="correctionFiles"
+                    type="file"
+                    multiple
+                    onChange={handleCorrectionFileChange}
+                    className="hidden"
+                    accept="image/*"
+                    capture="environment"
+                  />
+                  <label htmlFor="correctionFiles" className="cursor-pointer flex flex-col items-center">
+                    <UploadCloud className="h-6 w-6 mb-2 text-muted-foreground" aria-hidden="true" />
+                    <div className="text-sm text-muted-foreground">
+                      Glissez-déposez vos photos ici ou cliquez pour sélectionner
+                    </div>
+                    <div className="text-xs text-muted-foreground mt-2">Images uniquement</div>
+                  </label>
+                </div>
+                {correctionFiles.length > 0 && (
+                  <div className="mt-2 space-y-1">
+                    <p className="text-sm font-medium">{correctionFiles.length} photo(s) sélectionnée(s):</p>
+                    <ul className="space-y-1">
+                      {correctionFiles.map((file, idx) => (
+                        <li key={idx} className="text-sm text-muted-foreground">• {file.name}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
             </CardContent>
           </Card>
         </TabsContent>

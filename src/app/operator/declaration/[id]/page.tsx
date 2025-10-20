@@ -1,6 +1,6 @@
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { DeclarationDetail } from "@/components/declaration-detail"
+import { ObservationDetail } from "@/components/observation-detail"
 import { mockDeclarations } from "@/lib/mock-data"
 
 interface DeclarationPageProps {
@@ -15,7 +15,7 @@ export default async function DeclarationPage({ params }: DeclarationPageProps) 
     return (
       <main className="min-h-screen bg-background">
         <div className="container mx-auto px-4 py-8">
-          <h1 className="text-2xl font-bold mb-4">Déclaration non trouvée</h1>
+          <h1 className="text-2xl font-bold mb-4">Observation non trouvée</h1>
           <Link href="/operator/dashboard">
             <Button>Retour au dashboard</Button>
           </Link>
@@ -33,7 +33,7 @@ export default async function DeclarationPage({ params }: DeclarationPageProps) 
           </Button>
         </Link>
 
-        <DeclarationDetail declaration={declaration} />
+        <ObservationDetail declaration={declaration} />
       </div>
     </main>
   )

@@ -1,6 +1,6 @@
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { CreateDeclarationForm } from "@/components/create-form"
+import { CreateObservationForm } from "@/components/create-form"
 
 export default function CreateDeclarationPage() {
   return (
@@ -14,11 +14,11 @@ export default function CreateDeclarationPage() {
         </Link>
 
         {/* Page title */}
-        <h1 className="text-3xl font-bold mb-6">Créer une nouvelle déclaration</h1>
+        <h1 className="text-3xl font-bold mb-6">Créer une nouvelle observation</h1>
 
         {/* Form */}
         <div className="max-w-2xl">
-          <CreateDeclarationForm />
+          <CreateObservationForm />
         </div>
       </div>
     </main>
