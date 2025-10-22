@@ -27,6 +27,9 @@ export interface Observation {
     prenom: string
   }
   attachments: Attachment[]
+  // Added optional categorization fields
+  category?: string
+  subcategory?: string
   priority?: "Faible" | "Moyenne" | "Élevée"
   comments?: Comment[]
 }

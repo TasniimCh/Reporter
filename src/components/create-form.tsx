@@ -11,11 +11,14 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { UploadCloud, PlusCircle, X } from "lucide-react"
+import { CATEGORY_LIST, CATEGORIES } from "@/lib/categories"
 
 export function CreateObservationForm() {
   const router = useRouter()
   const [formData, setFormData] = useState({
     type: "",
+    category: "",
+    subcategory: "",
     description: "",
     location: "",
     improvementProposed: ""
@@ -32,6 +35,14 @@ export function CreateObservationForm() {
     setFormData((prev) => ({ ...prev, type: value }))
   }
 
+  const handleCategoryChange = (value: string) => {
+    setFormData((prev) => ({ ...prev, category: value, subcategory: "" }))
+  }
+
+  const handleSubcategoryChange = (value: string) => {
+    setFormData((prev) => ({ ...prev, subcategory: value }))
+  }
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       setFiles(Array.from(e.target.files))
@@ -46,6 +57,14 @@ export function CreateObservationForm() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
+    if (!formData.category) {
+      alert("Veuillez sélectionner une catégorie.")
+      return
+    }
+    if (!formData.subcategory) {
+      alert("Veuillez sélectionner une sous-catégorie.")
+      return
+    }
     if (files.length === 0) {
       alert("Une photo d'observation est requise.")
       return
@@ -72,6 +91,36 @@ export function CreateObservationForm() {
                 <SelectItem value="Zone de risque">Zone de risque</SelectItem>
                 <SelectItem value="Presque accident">Presque accident</SelectItem>
                 <SelectItem value="Accident">Accident</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Catégorie */}
+          <div className="space-y-2 flex flex-col">
+            <Label htmlFor="category">Catégorie *</Label>
+            <Select value={formData.category} onValueChange={handleCategoryChange}>
+              <SelectTrigger id="category">
+                <SelectValue placeholder="Sélectionner une catégorie" />
+              </SelectTrigger>
+              <SelectContent>
+                {CATEGORY_LIST.map((cat) => (
+                  <SelectItem key={cat} value={cat}>{cat}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Sous-catégorie */}
+          <div className="space-y-2 flex flex-col">
+            <Label htmlFor="subcategory">Sous-catégorie *</Label>
+            <Select value={formData.subcategory} onValueChange={handleSubcategoryChange} disabled={!formData.category}>
+              <SelectTrigger id="subcategory">
+                <SelectValue placeholder={formData.category ? "Sélectionner une sous-catégorie" : "Choisissez d'abord une catégorie"} />
+              </SelectTrigger>
+              <SelectContent>
+                {(formData.category ? CATEGORIES[formData.category] : []).map((sub) => (
+                  <SelectItem key={sub} value={sub}>{sub}</SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
